@@ -6,6 +6,7 @@ const axios = require('axios')
 const cheerio = require('cheerio')
 const app = express()
 
+
 const autoWeather = {
     weatherValueInC: "",
     weatherValueInF: "",
@@ -21,25 +22,25 @@ axios.get('https://weather.com/weather/today')
         const $ = cheerio.load(html)
 
         $('span.CurrentConditions--tempValue--3a50n:contains("°")', html).each(function () {
-            const weatherValueInC = parseInt($(this).text())
-            const weatherValueInF = Math.floor((parseInt(weatherValueInC) * 9 / 5) + 32)
+            const weatherValueInC = parseInt($(this).text());
+            const weatherValueInF = Math.floor((parseInt(weatherValueInC) * 9 / 5) + 32);
             autoWeather.weatherValueInC = weatherValueInC + '°C';
             autoWeather.weatherValueInF = weatherValueInF + '°F';
         })
         $('h1.CurrentConditions--location--kyTeL:contains("")', html).each(function () {
-            const location = $(this).text()
+            const location = $(this).text();
             autoWeather.location = location;
         })
         $('div.CurrentConditions--phraseValue--2Z18W:contains("")', html).each(function () {
-            const description = $(this).text()
+            const description = $(this).text();
             autoWeather.description = description;
         })
-        $('span.Wind--windWrapper--3aqXJ:contains("")', html).each(function () {
-            const wind = $(this).text()
-            autoWeather.wind = wind;
+        $('span.Wind--windWrapper--3aqXJ.undefined:contains("")', html).each(function () {
+            const wind = $(this).text();
+            autoWeather.wind = wind.replace(/\D/g, '') + " Km/h";
         })
         $('div.WeatherDetailsListItem--wxData--2s6HT:contains("%")', html).each(function () {
-            const Humidity = $(this).text()
+            const Humidity = $(this).text();
             autoWeather.Humidity = Humidity;
         })
     })
