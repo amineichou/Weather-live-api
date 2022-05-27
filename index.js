@@ -6,7 +6,14 @@ const axios = require('axios')
 const cheerio = require('cheerio')
 const app = express()
 
-const autoWeather = []
+const autoWeather = {
+    weatherValueInC: "",
+    weatherValueInF: "",
+    location: "",
+    description: "",
+    wind: "",
+    Humidity: '',
+}
 
 axios.get('https://weather.com/weather/today')
     .then((response) => {
@@ -16,34 +23,24 @@ axios.get('https://weather.com/weather/today')
         $('span.CurrentConditions--tempValue--3a50n:contains("°")', html).each(function () {
             const weatherValueInC = parseInt($(this).text())
             const weatherValueInF = Math.floor((parseInt(weatherValueInC) * 9 / 5) + 32)
-            autoWeather.push({
-                weatherValueInC: weatherValueInC + '°C',
-                weatherValueInF: weatherValueInF + '°F',
-            })
+            autoWeather.weatherValueInC = weatherValueInC + '°C';
+            autoWeather.weatherValueInF = weatherValueInF + '°F';
         })
         $('h1.CurrentConditions--location--kyTeL:contains("")', html).each(function () {
             const location = $(this).text()
-            autoWeather.push({
-                location,
-            })
+            autoWeather.location = location;
         })
         $('div.CurrentConditions--phraseValue--2Z18W:contains("")', html).each(function () {
             const description = $(this).text()
-            autoWeather.push({
-                description,
-            })
+            autoWeather.description = description;
         })
         $('span.Wind--windWrapper--3aqXJ:contains("")', html).each(function () {
             const wind = $(this).text()
-            autoWeather.push({
-                wind,
-            })
+            autoWeather.wind = wind;
         })
         $('div.WeatherDetailsListItem--wxData--2s6HT:contains("%")', html).each(function () {
             const Humidity = $(this).text()
-            autoWeather.push({
-                Humidity,
-            })
+            autoWeather.Humidity = Humidity;
         })
     })
 
