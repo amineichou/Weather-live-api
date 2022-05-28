@@ -10,6 +10,7 @@ const app = express()
 const autoWeather = {
     weatherValueInC: "",
     weatherValueInF: "",
+    time: "",
     location: "",
     description: "",
     wind: "",
@@ -26,6 +27,10 @@ axios.get('https://weather.com/weather/today')
             const weatherValueInF = Math.floor((parseInt(weatherValueInC) * 9 / 5) + 32);
             autoWeather.weatherValueInC = weatherValueInC + '°C';
             autoWeather.weatherValueInF = weatherValueInF + '°F';
+        })
+        $('span.CurrentConditions--timestamp--23dfw:contains("")', html).each(function () {
+            const time = $(this).text();
+            autoWeather.time = time;
         })
         $('h1.CurrentConditions--location--kyTeL:contains("")', html).each(function () {
             const location = $(this).text();
