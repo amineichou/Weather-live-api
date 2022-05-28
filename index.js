@@ -14,7 +14,8 @@ const autoWeather = {
     location: "",
     description: "",
     wind: "",
-    Humidity: '',
+    Humidity: "",
+    pressure: "",
 }
 
 axios.get('https://weather.com/weather/today')
@@ -47,6 +48,10 @@ axios.get('https://weather.com/weather/today')
         $('div.WeatherDetailsListItem--wxData--2s6HT:contains("%")', html).each(function () {
             const Humidity = $(this).text();
             autoWeather.Humidity = Humidity;
+        })
+        $('span.Pressure--pressureWrapper--3UYAZ:contains("")', html).each(function () {
+            const pressure = $(this).text();
+            autoWeather.pressure = pressure;
         })
     })
 
