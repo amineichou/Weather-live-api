@@ -51,7 +51,7 @@ axios.get('https://weather.com/weather/today')
         })
         $('span.Pressure--pressureWrapper--3UYAZ:contains("")', html).each(function () {
             const pressure = $(this).text();
-            autoWeather.pressure = pressure;
+            autoWeather.pressure = pressure.replace(/\D/g, '') + "mb";
         })
     })
 
