@@ -5,13 +5,18 @@ const express = require('express')
 const axios = require('axios')
 const cheerio = require('cheerio')
 const cors = require('cors')
+const { request } = require('express')
 const app = express()
+
+
+app.use(express.urlencoded({ extended: true }))
 
 app.use(
     cors({
         origin: "*",
     })
 )
+
 
 const autoWeather = {
     weatherValueInC: "",
@@ -24,7 +29,9 @@ const autoWeather = {
     pressure: "",
 }
 
-axios.get('https://weather.com/weather/today')
+
+const getCurrentWeather = (coords) => {
+    axios.get(`https://weather.com/weather/today/l/${coords}/?unit=m`)
     .then((response) => {
         const html = response.data
         const $ = cheerio.load(html)
@@ -47,7 +54,7 @@ axios.get('https://weather.com/weather/today')
             const description = $(this).text();
             autoWeather.description = description;
         })
-        $('span.Wind--windWrapper--3aqXJ.undefined:contains("")', html).each(function () {
+        $('div.WeatherDetailsListItem--wxData--2s6HT:contains("km/h")', html).each(function () {
             const wind = $(this).text();
             autoWeather.wind = wind.replace(/\D/g, '') + " Km/h";
         })
@@ -57,16 +64,19 @@ axios.get('https://weather.com/weather/today')
         })
         $('span.Pressure--pressureWrapper--3UYAZ:contains("")', html).each(function () {
             const pressure = $(this).text();
-            autoWeather.pressure = pressure.replace(/\D/g, '') + "mb";
+            autoWeather.pressure = pressure.replace('Arrow Up', '').replace('Arrow Down', '');
         })
     })
+}
+
 
 app.get('/', (req, res) => {
-    res.json('Welcome to weather today API. Go to /autoWeather ')
+    res.json('Welcome to weather today API. Go to /manuWeather/(city coordinates here)')
 })
 
-app.get('/autoWeather', (req, res) => {
-    res.json(autoWeather)
+app.get('/manuWeather/:id', (req, res) => {
+    getCurrentWeather(req.params.id);
+    res.json(autoWeather);
 })
 
 app.listen(PORT, () => console.log(`server running on port ${PORT}`))
