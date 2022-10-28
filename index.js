@@ -5,7 +5,7 @@ const express = require('express')
 const axios = require('axios')
 const cheerio = require('cheerio')
 const cors = require('cors')
-const { request } = require('express')
+// const { request } = require('express')
 const app = express()
 
 
@@ -18,65 +18,208 @@ app.use(
 )
 
 
-const autoWeather = {
-    weatherValueInC: "",
-    weatherValueInF: "",
-    time: "",
-    location: "",
-    description: "",
-    wind: "",
-    Humidity: "",
-    pressure: "",
-}
+let weatherData = [];
 
 
-const getCurrentWeather = (coords) => {
-    axios.get(`https://weather.com/weather/today/l/${coords}/?unit=m`)
-    .then((response) => {
-        const html = response.data
-        const $ = cheerio.load(html)
 
-        $('span.CurrentConditions--tempValue--3a50n:contains("°")', html).each(function () {
-            const weatherValueInC = parseInt($(this).text());
-            const weatherValueInF = Math.floor((parseInt(weatherValueInC) * 9 / 5) + 32);
-            autoWeather.weatherValueInC = weatherValueInC + '°C';
-            autoWeather.weatherValueInF = weatherValueInF + '°F';
-        })
-        $('span.CurrentConditions--timestamp--23dfw:contains("")', html).each(function () {
-            const time = $(this).text();
-            autoWeather.time = time;
-        })
-        $('h1.CurrentConditions--location--kyTeL:contains("")', html).each(function () {
-            const location = $(this).text();
-            autoWeather.location = location;
-        })
-        $('div.CurrentConditions--phraseValue--2Z18W:contains("")', html).each(function () {
-            const description = $(this).text();
-            autoWeather.description = description;
-        })
-        $('div.WeatherDetailsListItem--wxData--2s6HT:contains("km/h")', html).each(function () {
-            const wind = $(this).text();
-            autoWeather.wind = wind.replace(/\D/g, '') + " Km/h";
-        })
-        $('div.WeatherDetailsListItem--wxData--2s6HT:contains("%")', html).each(function () {
-            const Humidity = $(this).text();
-            autoWeather.Humidity = Humidity;
-        })
-        $('span.Pressure--pressureWrapper--3UYAZ:contains("")', html).each(function () {
-            const pressure = $(this).text();
-            autoWeather.pressure = pressure.replace('Arrow Up', '').replace('Arrow Down', '');
+axios.get('https://www.timeanddate.com/weather/?continent=africa&low=1')
+    .then(response => {
+        const html = response.data;
+        const $ = cheerio.load(html);
+        $('tbody>tr', html).each(function () {
+            var a = $(this);
+            let city = a.find('td>a').eq(0).text();
+            let temperature = a.find('td.rbi').eq(0).text();
+            let icon = a.find('td.r').find('img').eq(0).attr('src');
+            weatherData.push(
+                {
+                    "city": city,
+                    "temperature": temperature,
+                    "icon": icon
+                }
+            )
+            let city_1 = a.find('td>a').eq(1).text();
+            let temperature_1 = a.find('td.rbi').eq(1).text();
+            let icon_1 = a.find('td.r').find('img').eq(1).attr('src');
+            weatherData.push(
+                {
+                    "city": city_1,
+                    "temperature": temperature_1,
+                    "icon": icon_1
+                }
+            )
+            // let city_2 = a.find('td>a').eq(2).text();
+            // let temperature_2 = a.find('td.rbi').eq(2).text();
+            // let icon_2 = a.find('td.r').find('img').eq(2).attr('src');
+            // weatherData.push(
+            //     {
+            //         "city": city_2,
+            //         "temperature": temperature_2,
+            //         "icon": icon_2
+            //     }
+            // )
         })
     })
-}
+axios.get('https://www.timeanddate.com/weather/?continent=samerica&low=1')
+    .then(response => {
+        const html = response.data;
+        const $ = cheerio.load(html);
+        $('tbody>tr', html).each(function () {
+            var a = $(this);
+            let city = a.find('td>a').eq(0).text();
+            let temperature = a.find('td.rbi').eq(0).text();
+            let icon = a.find('td.r').find('img').eq(0).attr('src');
+            weatherData.push(
+                {
+                    "city": city,
+                    "temperature": temperature,
+                    "icon": icon
+                }
+            )
+            let city_1 = a.find('td>a').eq(1).text();
+            let temperature_1 = a.find('td.rbi').eq(1).text();
+            let icon_1 = a.find('td.r').find('img').eq(1).attr('src');
+            weatherData.push(
+                {
+                    "city": city_1,
+                    "temperature": temperature_1,
+                    "icon": icon_1
+                }
+            )
+            // let city_2 = a.find('td>a').eq(2).text();
+            // let temperature_2 = a.find('td.rbi').eq(2).text();
+            // let icon_2 = a.find('td.r').find('img').eq(2).attr('src');
+            // weatherData.push(
+            //     {
+            //         "city": city_2,
+            //         "temperature": temperature_2,
+            //         "icon": icon_2
+            //     }
+            // )
+        })
+    })
+axios.get('https://www.timeanddate.com/weather/?continent=asia')
+    .then(response => {
+        const html = response.data;
+        const $ = cheerio.load(html);
+        $('tbody>tr', html).each(function () {
+            var a = $(this);
+            let city = a.find('td>a').eq(0).text();
+            let temperature = a.find('td.rbi').eq(0).text();
+            let icon = a.find('td.r').find('img').eq(0).attr('src');
+            weatherData.push(
+                {
+                    "city": city,
+                    "temperature": temperature,
+                    "icon": icon
+                }
+            )
+            let city_1 = a.find('td>a').eq(1).text();
+            let temperature_1 = a.find('td.rbi').eq(1).text();
+            let icon_1 = a.find('td.r').find('img').eq(1).attr('src');
+            weatherData.push(
+                {
+                    "city": city_1,
+                    "temperature": temperature_1,
+                    "icon": icon_1
+                }
+            )
+            // let city_2 = a.find('td>a').eq(2).text();
+            // let temperature_2 = a.find('td.rbi').eq(2).text();
+            // let icon_2 = a.find('td.r').find('img').eq(2).attr('src');
+            // weatherData.push(
+            //     {
+            //         "city": city_2,
+            //         "temperature": temperature_2,
+            //         "icon": icon_2
+            //     }
+            // )
+        })
+    })
+axios.get('https://www.timeanddate.com/weather/?continent=australasia')
+    .then(response => {
+        const html = response.data;
+        const $ = cheerio.load(html);
+        $('tbody>tr', html).each(function () {
+            var a = $(this);
+            let city = a.find('td>a').eq(0).text();
+            let temperature = a.find('td.rbi').eq(0).text();
+            let icon = a.find('td.r').find('img').eq(0).attr('src');
+            weatherData.push(
+                {
+                    "city": city,
+                    "temperature": temperature,
+                    "icon": icon
+                }
+            )
+            let city_1 = a.find('td>a').eq(1).text();
+            let temperature_1 = a.find('td.rbi').eq(1).text();
+            let icon_1 = a.find('td.r').find('img').eq(1).attr('src');
+            weatherData.push(
+                {
+                    "city": city_1,
+                    "temperature": temperature_1,
+                    "icon": icon_1
+                }
+            )
+            // let city_2 = a.find('td>a').eq(2).text();
+            // let temperature_2 = a.find('td.rbi').eq(2).text();
+            // let icon_2 = a.find('td.r').find('img').eq(2).attr('src');
+            // weatherData.push(
+            //     {
+            //         "city": city_2,
+            //         "temperature": temperature_2,
+            //         "icon": icon_2
+            //     }
+            // )
+        })
+    })
+axios.get('https://www.timeanddate.com/weather/?continent=europe')
+    .then(response => {
+        const html = response.data;
+        const $ = cheerio.load(html);
+        $('tbody>tr', html).each(function () {
+            var a = $(this);
+            let city = a.find('td>a').eq(0).text();
+            let temperature = a.find('td.rbi').eq(0).text();
+            let icon = a.find('td.r').find('img').eq(0).attr('src');
+            weatherData.push(
+                {
+                    "city": city,
+                    "temperature": temperature,
+                    "icon": icon
+                }
+            )
+            let city_1 = a.find('td>a').eq(1).text();
+            let temperature_1 = a.find('td.rbi').eq(1).text();
+            let icon_1 = a.find('td.r').find('img').eq(1).attr('src');
+            weatherData.push(
+                {
+                    "city": city_1,
+                    "temperature": temperature_1,
+                    "icon": icon_1
+                }
+            )
+            // let city_2 = a.find('td>a').eq(2).text();
+            // let temperature_2 = a.find('td.rbi').eq(2).text();
+            // let icon_2 = a.find('td.r').find('img').eq(2).attr('src');
+            // weatherData.push(
+            //     {
+            //         "city": city_2,
+            //         "temperature": temperature_2,
+            //         "icon": icon_2
+            //     }
+            // )
+        })
+    })
 
 
 app.get('/', (req, res) => {
-    res.json('Welcome to weather today API. Go to /manuWeather/(city coordinates here)')
+    res.json('Welcome to weather today API. Go to /get')
 })
 
-app.get('/manuWeather/:id', (req, res) => {
-    getCurrentWeather(req.params.id);
-    res.json(autoWeather);
+app.get('/get', (req, res) => {
+    res.json(weatherData);
 })
 
 app.listen(PORT, () => console.log(`server running on port ${PORT}`))
